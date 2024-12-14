@@ -3,9 +3,9 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-class User(BaseModel):
-    username: str
-    age: int
+#class User(BaseModel):
+#    username: str
+#    age: int
 
 @app.get("/")
 async def root():
