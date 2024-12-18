@@ -13,7 +13,7 @@ class User(BaseModel):
 
 class UserCreate(BaseModel):
     username: str = Field(..., min_length=5, max_length=100)
-    age: int = Field(..., min=18, max=120)
+    age: int = Field(..., ge=18, le=120)
 
 users: List[User]=[User(id =1, username='Example', age =18)]
 
