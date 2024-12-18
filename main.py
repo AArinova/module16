@@ -15,14 +15,14 @@ class UserCreate(BaseModel):
     username: str = Field(..., min_length=5, max_length=100)
     age: int = Field(..., ge=18, le=120)
 
-users: List[User]=[User(id =1, username='Example', age =18)]
+users: List[User]=[User(id=1, username='Example', age=22)]
 
 @app.get("/user", response_model=List[User])
 async def get_users():
     return users
 
 @app.post("/user/{username}/{age}", response_model=User)
-async def create_task(user: UserCreate):
+async def create_user(user: UserCreate):
     new_id = max((t.id for t in users), default=0) + 1
     new_user = User(id=new_id, username=user.username, age=user.age)
     users.append(new_user)
@@ -42,7 +42,7 @@ async def delete_user(user_id: int):
     for i, i_user in enumerate(users):
         if i_user.id == user_id:
             del users[i]
-            return {"detail": "Задача удалена"}
+            return {"detail": "Пользователь удалён."}
     raise HTTPException(status_code=404, detail="User was not found")
 
 
