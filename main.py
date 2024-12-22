@@ -1,10 +1,13 @@
-from http.client import HTTPException
-from fastapi import FastAPI, Path
-from typing import Annotated
+from fastapi.exceptions import HTTPException
+from fastapi import Request, FastAPI, Path
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Annotated
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 
-app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+#app = FastAPI()
+app = FastAPI(swagger_ui_parameters={"tryItOutEnabled": True}, debug=True)
 
 class User(BaseModel):
     id: int
@@ -17,9 +20,10 @@ class UserCreate(BaseModel):
 
 users: List[User]=[User(id=1, username='Example', age=22)]
 
-@app.get("/user", response_model=List[User])
-async def get_users():
-    return users
+@app.get("/", response_class=HTMLResponse)
+async def get_users(request: Request):
+    return templates.TemplateResponse("users.html", {"request": request, "users": users})
+
 
 @app.post("/user/{username}/{age}", response_model=User)
 async def create_user(user: UserCreate):
@@ -35,7 +39,7 @@ async def update_user(user_id: int, user: UserCreate):
             i_user.username = user.username
             i_user.age = user.age
             return i_user
-        raise HTTPException(status_code=404, detail="Нет пользователя с таким id.")
+    raise HTTPException(status_code=404, detail="Нет пользователя с таким id.")
 
 @app.delete("/user/{user_id}", response_model=dict)
 async def delete_user(user_id: int):
