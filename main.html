@@ -16,7 +16,7 @@
 </header>
 <div class="container-fluid">
     {% block crud_container %}
-        <p>Нашёлся пользователь.</p>
+        <p>Нашёлся пользователь с id = {{ user.id }}.</p>
         <h3>{{ user.id }}</h3>
         <p>Name: {{ user.username }}</p>
         <p>Age: {{ user.age }}</p>
